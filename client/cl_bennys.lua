@@ -21,15 +21,8 @@ isPlyInBennys = false
 
 --#[Local Variables]#--
 local plyFirstJoin = false
-
-
 local nearDefault = false
-local bennyLocation = vector3(-211.55, -1324.55, 30.90)
-local bennyPaletoLocation = vector3(109.89, 6627.07, 31.78)
-
-
 local bennyHeading = 319.73135375977
-
 local originalCategory = nil
 local originalMod = nil
 local originalPrimaryColour = nil
@@ -51,7 +44,6 @@ local originalNeonColourB = nil
 local originalXenonColour = nil
 local originalOldLivery = nil
 local originalPlateIndex = nil
-
 local attemptingPurchase = false
 local isPurchaseSuccessful = false
 
@@ -752,10 +744,6 @@ function ExitBennys()
 
     isPlyInBennys = false
 end
-
-
-
-
 
 RegisterNetEvent('event:control:bennys')
 AddEventHandler('event:control:bennys', function(useID)
