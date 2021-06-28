@@ -4,6 +4,12 @@ maxVehiclePerformanceUpgrades = 0 -- Set to 0 to have all the upgrades
 vehicleBaseRepairCost = 600
 vehicleRepairCostMultiplier = 1
 
+-- Location Configs
+
+--[[ bennyLocations = {
+    vector4(-211.55, -1324.55, 30.90, 319.731)
+} ]]
+
 -- ADJUST PRICING
 
 vehicleCustomisationPrices = {

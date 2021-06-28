@@ -41,7 +41,7 @@ RegisterServerEvent("updateVehicle")
 AddEventHandler("updateVehicle", function(myCar)
 	local src = source
     if IsVehicleOwned(myCar.plate) then
-        QBCore.Functions.ExecuteSql(false, "UPDATE `player_vehicles` SET `mods` = '"..json.encode(myCar).."' WHERE `plate` = '"..myCar.plate.."'")
+        exports.ghmattimysql:execute('UPDATE player_vehicles SET mods=@mods WHERE plate=@plate', {['@mods'] = json.encode(myCar), ['@plate'] = myCar.plate})
     end
 end)
 
