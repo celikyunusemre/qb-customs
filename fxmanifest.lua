@@ -12,13 +12,14 @@ files {
     'html/sounds/respray.ogg'
 }
 
+shared_scripts { 
+	'@qb-core/import.lua',
+	'config.lua'
+}
+
 client_scripts {
-    'config.lua',
     'client/cl_ui.lua',
     'client/cl_bennys.lua'
 }
 
-server_scripts {
-    'config.lua',
-    'server/sv_bennys.lua'
-}
+server_script 'server/sv_bennys.lua'

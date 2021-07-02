@@ -1,19 +1,3 @@
-QBCore = nil
-
-Citizen.CreateThread(function()
-    while QBCore == nil do
-    	TriggerEvent('QBCore:GetObject', function(obj) QBCore = obj end)
-    	Citizen.Wait(200)
-    end
-end)
-
---[[
-cl_bennys.lua
-Functionality that handles the player for Benny's.
-Handles applying mods, etc.
-]]
-
---#[Global Variables]#--
 isPlyInBennys = false
 
 --#[Local Variables]#--
