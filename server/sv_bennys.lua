@@ -43,10 +43,9 @@ end)
 
 function IsVehicleOwned(plate)
     local retval = false
-    QBCore.Functions.ExecuteSql(true, "SELECT `plate` FROM `player_vehicles` WHERE `plate` = '"..plate.."'", function(result)
-        if result[1] ~= nil then
-            retval = true
-        end
-    end)
+    local result = exports.ghmattimysql:scalarSync('SELECT plate FROM player_vehicles WHERE plate=@plate', {['@plate'] = plate})
+    if result then
+        retval = true
+    end
     return retval
 end
