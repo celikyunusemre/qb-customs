@@ -726,26 +726,6 @@ function ExitBennys()
     isPlyInBennys = false
 end
 
-RegisterNetEvent('event:control:bennys')
-AddEventHandler('event:control:bennys', function(useID)
-    if IsPedInAnyVehicle(PlayerPedId(), false) then
-        bennyHeading = 319.73135375977
-        if useID == 1 and not isPlyInBennys then -- Bennys
-            enterLocation(bennyLocation)
-        end
-    end
-end)
-
-RegisterNetEvent('event:control:bennyss')
-AddEventHandler('event:control:bennyss', function(useID)
-    if IsPedInAnyVehicle(PlayerPedId(), false) then
-        bennyHeading = 221.7938
-        if useID == 1 and not isPlyInBennys then -- Bennys
-            enterLocation(bennyPaletoLocation)
-        end
-    end
-end)
-
 function enterLocation(locationsPos)
     local plyPed = PlayerPedId()
     local plyVeh = GetVehiclePedIsIn(plyPed, false)
@@ -815,85 +795,6 @@ end
 
 -- -- #MarkedForMarker
 -- --#[Citizen Threads]#--
--- Citizen.CreateThread(function()
---     while true do 
---         local plyPed = PlayerPedId()
-
---         if IsPedInAnyVehicle(plyPed, false) then
---             local plyPos = GetEntityCoords(plyPed)
-
-
---             nearDefault = isNear(plyPos, bennyLocation, 10) 
-
---             if nearDefault then
-
---                 if not isPlyInBennys and nearDefault then
---                     DrawMarker(21, bennyLocation.x, bennyLocation.y, bennyLocation.z + 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 148, 0, 211, 255, true, false, 2, true, nil, nil, false)
---                 end
-
-
-
---                 if nearDefault then
---                     if not isPlyInBennys then
---                         Draw3DText(bennyLocation.x, bennyLocation.y, bennyLocation.z + 0.5, "[Press ~p~E~w~ - Enter Benny's Motorworks]", 255, 255, 255, 255, 4, 0.45, true, true, true, true, 0, 0, 0, 0, 55)
---                         if IsControlJustReleased(1, 38) then
---                             TriggerEvent('event:control:bennys', 1)
---                         end
---                     else
---                         disableControls()
---                     end
---                 end
-
---             else
---                 Wait(1000)
---             end
---         else
---             Wait(2000)
---         end
-
---         Citizen.Wait(1)
---     end
--- end)
-
--- Citizen.CreateThread(function()
---     while true do 
---         local plyPed = PlayerPedId()
-
---         if IsPedInAnyVehicle(plyPed, false) then
---             local plyPos = GetEntityCoords(plyPed)
-
-
---             nearDefault = isNear(plyPos, bennyPaletoLocation, 10) 
-
---             if nearDefault then
-
---                 if not isPlyInBennys and nearDefault then
---                     DrawMarker(21, bennyPaletoLocation.x, bennyPaletoLocation.y, bennyPaletoLocation.z + 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 148, 0, 211, 255, true, false, 2, true, nil, nil, false)
---                 end
-
-
-
---                 if nearDefault then
---                     if not isPlyInBennys then
---                         Draw3DText(bennyPaletoLocation.x, bennyPaletoLocation.y, bennyPaletoLocation.z + 0.5, "[Press ~p~E~w~ - Enter Billy's Motorworks]", 255, 255, 255, 255, 4, 0.45, true, true, true, true, 0, 0, 0, 0, 55)
---                         if IsControlJustReleased(1, 38) then
---                             TriggerEvent('event:control:bennyss', 1)
---                         end
---                     else
---                         disableControls()
---                     end
---                 end
-
---             else
---                 Wait(1000)
---             end
---         else
---             Wait(2000)
---         end
-
---         Citizen.Wait(1)
---     end
--- end)
 
 local bennyLocation
 
