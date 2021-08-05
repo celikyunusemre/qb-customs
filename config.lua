@@ -1,10 +1,22 @@
-bennyLocation = vector3(-211.55, -1324.55, 30.90)
-bennyPaletoLocation = vector3(109.89, 6627.07, 31.78)
+Config = {}
+
+Config.Job = true -- set to true if you want customs to be handled by specific jobs
+Config.Authorized = {'mechanic', 'police'} --jobs which are authorized to use it.
+
+-- Add more garages here--
+
+
 maxVehiclePerformanceUpgrades = 0 -- Set to 0 to have all the upgrades
 vehicleBaseRepairCost = 600
 vehicleRepairCostMultiplier = 1
 
 -- Location Configs
+-- Add locations here
+
+bennyGarages = {
+    [1] = vector4(-211.55, -1324.55, 30.90, 319.73135375977),
+    [2] = vector4(109.89, 6627.07, 31.78, 221.7938),
+}
 
 --[[ bennyLocations = {
     vector4(-211.55, -1324.55, 30.90, 319.731)
