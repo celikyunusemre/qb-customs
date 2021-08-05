@@ -33,7 +33,7 @@ local bennyLocation
 
 Citizen.CreateThread(function()
     for k, v in pairs(bennyGarages) do
-        local blip = AddBlipForCoord(v.x,v.y,v.z)
+        local blip = AddBlipForCoord(v.coords.x,v.coords.y,v.coords.z)
         SetBlipSprite(blip, 72)
         SetBlipScale(blip, 0.7)
         SetBlipAsShortRange(blip,true)
@@ -744,7 +744,7 @@ end
 RegisterNetEvent('event:control:bennys')
 AddEventHandler('event:control:bennys', function(useID)
     if IsPedInAnyVehicle(PlayerPedId(), false) then
-        bennyHeading = bennyGarages[useID].w
+        bennyHeading = bennyGarages[useID].coords.w
         if not isPlyInBennys then -- Bennys
             enterLocation(bennyLocation)
         end
@@ -828,20 +828,20 @@ Citizen.CreateThread(function()
             local plyPos = GetEntityCoords(plyPed)
             for k, v in pairs(bennyGarages) do
 
-                nearDefault = isNear(plyPos, vector3(v.x,v.y,v.z), 10) 
+                nearDefault = isNear(plyPos, vector3(v.coords.x,v.coords.y,v.coords.z), 10) 
 
                 if nearDefault then
                     if not isPlyInBennys and nearDefault then
-                        DrawMarker(21, v.x, v.y, v.z + 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 148, 0, 211, 255, true, false, 2, true, nil, nil, false)
+                        DrawMarker(21, v.coords.x, v.coords.y, v.coords.z + 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 148, 0, 211, 255, true, false, 2, true, nil, nil, false)
                     end
 
-                    bennyLocation = vector3(v.x, v.y, v.z)
+                    bennyLocation = vector3(v.coords.x, v.coords.y, v.coords.z)
 
                     if nearDefault then
                         if not isPlyInBennys then
-                            Draw3DText(v.x, v.y, v.z + 0.5, "[Press ~p~E~w~ - Enter Benny's Motorworks]", 255, 255, 255, 255, 4, 0.45, true, true, true, true, 0, 0, 0, 0, 55)
+                            Draw3DText(v.coords.x, v.coords.y, v.coords.z + 0.5, "[Press ~p~E~w~ - Enter Benny's Motorworks]", 255, 255, 255, 255, 4, 0.45, true, true, true, true, 0, 0, 0, 0, 55)
                             if IsControlJustReleased(1, 38) then
-                                if (Config.Job and isAuthorized(QBCore.Functions.GetPlayerData().job.name)) or not Config.Job then
+                                if (Config.Job and isAuthorized((QBCore.Functions.GetPlayerData().job.name), k)) or not Config.Job then
                                     TriggerEvent('event:control:bennys', k)
                                 else
                                     QBCore.Functions.Notify("You are not authorized", "error")
@@ -879,9 +879,9 @@ end)
 
 --helper function 
 
-function isAuthorized(job)
-    for a=1, #Config.Authorized do
-        if job == Config.Authorized[a] then
+function isAuthorized(job, location)
+    for a=1, #bennyGarages[location].job do
+        if job == bennyGarages[location].job[a] then
             return true
         end
     end
