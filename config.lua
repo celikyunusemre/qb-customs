@@ -1,4 +1,3 @@
-Config = {}
 
 -- Config.Job = true -- set to true if you want customs to be handled by specific DisplayJobReport()
 
