@@ -1,6 +1,3 @@
-
--- Config.Job = true -- set to true if you want customs to be handled by specific DisplayJobReport()
-
 maxVehiclePerformanceUpgrades = 0 -- Set to 0 to have all the upgrades
 vehicleBaseRepairCost = 600
 vehicleRepairCostMultiplier = 1
