@@ -27,6 +27,21 @@ local originalOldLivery = nil
 local originalPlateIndex = nil
 local attemptingPurchase = false
 local isPurchaseSuccessful = false
+local bennyLocation
+
+--Blips
+
+Citizen.CreateThread(function()
+    for k, v in pairs(bennyGarages) do
+        local blip = AddBlipForCoord(v.coords.x,v.coords.y,v.coords.z)
+        SetBlipSprite(blip, 72)
+        SetBlipScale(blip, 0.7)
+        SetBlipAsShortRange(blip,true)
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentString("Benny's Motorworks")
+        EndTextCommandSetBlipName(blip)
+    end
+end)
 
 --#[Local Functions]#--
 local function isNear(pos1, pos2, distMustBe)
@@ -729,19 +744,9 @@ end
 RegisterNetEvent('event:control:bennys')
 AddEventHandler('event:control:bennys', function(useID)
     if IsPedInAnyVehicle(PlayerPedId(), false) then
-        bennyHeading = 319.73135375977
-        if useID == 1 and not isPlyInBennys then -- Bennys
+        bennyHeading = bennyGarages[useID].coords.w
+        if not isPlyInBennys then -- Bennys
             enterLocation(bennyLocation)
-        end
-    end
-end)
-
-RegisterNetEvent('event:control:bennyss')
-AddEventHandler('event:control:bennyss', function(useID)
-    if IsPedInAnyVehicle(PlayerPedId(), false) then
-        bennyHeading = 221.7938
-        if useID == 1 and not isPlyInBennys then -- Bennys
-            enterLocation(bennyPaletoLocation)
         end
     end
 end)
@@ -821,71 +826,32 @@ Citizen.CreateThread(function()
 
         if IsPedInAnyVehicle(plyPed, false) then
             local plyPos = GetEntityCoords(plyPed)
+            for k, v in pairs(bennyGarages) do
 
-
-            nearDefault = isNear(plyPos, bennyLocation, 10) 
-
-            if nearDefault then
-
-                if not isPlyInBennys and nearDefault then
-                    DrawMarker(21, bennyLocation.x, bennyLocation.y, bennyLocation.z + 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 148, 0, 211, 255, true, false, 2, true, nil, nil, false)
-                end
-
-
+                nearDefault = isNear(plyPos, vector3(v.coords.x,v.coords.y,v.coords.z), 10) 
 
                 if nearDefault then
-                    if not isPlyInBennys then
-                        Draw3DText(bennyLocation.x, bennyLocation.y, bennyLocation.z + 0.5, "[Press ~p~E~w~ - Enter Benny's Motorworks]", 255, 255, 255, 255, 4, 0.45, true, true, true, true, 0, 0, 0, 0, 55)
-                        if IsControlJustReleased(1, 38) then
-                            TriggerEvent('event:control:bennys', 1)
+                    if not isPlyInBennys and nearDefault then
+                        DrawMarker(21, v.coords.x, v.coords.y, v.coords.z + 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 148, 0, 211, 255, true, false, 2, true, nil, nil, false)
+                    end
+
+                    bennyLocation = vector3(v.coords.x, v.coords.y, v.coords.z)
+
+                    if nearDefault then
+                        if not isPlyInBennys then
+                            Draw3DText(v.coords.x, v.coords.y, v.coords.z + 0.5, "[Press ~p~E~w~ - Enter Benny's Motorworks]", 255, 255, 255, 255, 4, 0.45, true, true, true, true, 0, 0, 0, 0, 55)
+                            if IsControlJustReleased(1, 38) then
+                                if (v.useJob and isAuthorized((QBCore.Functions.GetPlayerData().job.name), k)) or not v.useJob then
+                                    TriggerEvent('event:control:bennys', k)
+                                else
+                                    QBCore.Functions.Notify("You are not authorized", "error")
+                                end
+                            end
+                        else
+                            disableControls()
                         end
-                    else
-                        disableControls()
                     end
                 end
-
-            else
-                Wait(1000)
-            end
-        else
-            Wait(2000)
-        end
-
-        Citizen.Wait(1)
-    end
-end)
-
-Citizen.CreateThread(function()
-    while true do 
-        local plyPed = PlayerPedId()
-
-        if IsPedInAnyVehicle(plyPed, false) then
-            local plyPos = GetEntityCoords(plyPed)
-
-
-            nearDefault = isNear(plyPos, bennyPaletoLocation, 10) 
-
-            if nearDefault then
-
-                if not isPlyInBennys and nearDefault then
-                    DrawMarker(21, bennyPaletoLocation.x, bennyPaletoLocation.y, bennyPaletoLocation.z + 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 148, 0, 211, 255, true, false, 2, true, nil, nil, false)
-                end
-
-
-
-                if nearDefault then
-                    if not isPlyInBennys then
-                        Draw3DText(bennyPaletoLocation.x, bennyPaletoLocation.y, bennyPaletoLocation.z + 0.5, "[Press ~p~E~w~ - Enter Billy's Motorworks]", 255, 255, 255, 255, 4, 0.45, true, true, true, true, 0, 0, 0, 0, 55)
-                        if IsControlJustReleased(1, 38) then
-                            TriggerEvent('event:control:bennyss', 1)
-                        end
-                    else
-                        disableControls()
-                    end
-                end
-
-            else
-                Wait(1000)
             end
         else
             Wait(2000)
@@ -909,3 +875,15 @@ AddEventHandler("qb-customs:purchaseFailed", function()
     attemptingPurchase = false
     QBCore.Functions.Notify("Not enough money", "error")
 end)
+
+
+--helper function 
+
+function isAuthorized(job, location)
+    for a=1, #bennyGarages[location].job do
+        if job == bennyGarages[location].job[a] then
+            return true
+        end
+    end
+    return false
+end
