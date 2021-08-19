@@ -7,7 +7,6 @@ files {
     'html/index.html',
     'html/css/menu.css',
     'html/js/ui.js',
-    'html/imgs/logo.png',
     'html/sounds/wrench.ogg',
     'html/sounds/respray.ogg'
 }
