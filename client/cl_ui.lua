@@ -1,23 +1,13 @@
---[[
-cl_ui.lua
-Functionality for everything that is the UI.
-]]
-
 --#[Local Variable]#--
 local currentMenuItemID = 0
 local currentMenuItem = ""
 local currentMenuItem2 = ""
 local currentMenu = "mainMenu"
-
 local currentCategory = 0
-
 local currentResprayCategory = 0
 local currentResprayType = 0
-
 local currentWheelCategory = 0
-
 local currentNeonSide = 0
-
 local menuStructure = {}
 
 --#[Local Functions]#--
