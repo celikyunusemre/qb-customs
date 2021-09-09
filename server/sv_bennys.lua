@@ -4,10 +4,19 @@ RegisterServerEvent('qb-customs:attemptPurchase')
 AddEventHandler('qb-customs:attemptPurchase', function(type, upgradeLevel)
     local source = source
     local Player = QBCore.Functions.GetPlayer(source)
-    local balance = exports['qb-bossmenu']:GetAccount(Player.PlayerData.job.name)
+    local balance = nil
+    if Player.PlayerData.job.name == "mechanic" then
+        balance = exports['qb-bossmenu']:GetAccount(Player.PlayerData.job.name)
+    else
+        balance = Player.Functions.GetMoney(moneyType)
+    end
     if type == "repair" then
         if balance >= chicken then
-            TriggerEvent('qb-bossmenu:server:removeAccountMoney', Player.PlayerData.job.name, chicken)
+            if Player.PlayerData.job.name == "mechanic" then
+                TriggerEvent('qb-bossmenu:server:removeAccountMoney', Player.PlayerData.job.name, chicken)
+            else
+                Player.Functions.RemoveMoney(moneyType, chicken, "bennys")
+            end
             TriggerClientEvent('qb-customs:purchaseSuccessful', source)
         else
             TriggerClientEvent('qb-customs:purchaseFailed', source)
@@ -15,14 +24,22 @@ AddEventHandler('qb-customs:attemptPurchase', function(type, upgradeLevel)
     elseif type == "performance" then
         if balance >= vehicleCustomisationPrices[type].prices[upgradeLevel] then
             TriggerClientEvent('qb-customs:purchaseSuccessful', source)
-            TriggerEvent('qb-bossmenu:server:removeAccountMoney', Player.PlayerData.job.name, vehicleCustomisationPrices[type].prices[upgradeLevel])
+            if Player.PlayerData.job.name == "mechanic" then
+                TriggerEvent('qb-bossmenu:server:removeAccountMoney', Player.PlayerData.job.name, vehicleCustomisationPrices[type].prices[upgradeLevel])
+            else
+                Player.Functions.RemoveMoney(moneyType, vehicleCustomisationPrices[type].prices[upgradeLevel], "bennys")
+            end
         else
             TriggerClientEvent('qb-customs:purchaseFailed', source)
         end
     else
         if balance >= vehicleCustomisationPrices[type].price then
             TriggerClientEvent('qb-customs:purchaseSuccessful', source)
-            TriggerEvent('qb-bossmenu:server:removeAccountMoney', Player.PlayerData.job.name, vehicleCustomisationPrices[type].price)
+            if Player.PlayerData.job.name == "mechanic" then
+                TriggerEvent('qb-bossmenu:server:removeAccountMoney', Player.PlayerData.job.name, vehicleCustomisationPrices[type].price)
+            else
+                Player.Functions.RemoveMoney(moneyType, vehicleCustomisationPrices[type].price, "bennys")
+            end
         else
             TriggerClientEvent('qb-customs:purchaseFailed', source)
         end
