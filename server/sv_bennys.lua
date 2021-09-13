@@ -25,7 +25,8 @@ AddEventHandler('qb-customs:attemptPurchase', function(type, upgradeLevel)
         if balance >= vehicleCustomisationPrices[type].prices[upgradeLevel] then
             TriggerClientEvent('qb-customs:purchaseSuccessful', source)
             if Player.PlayerData.job.name == "mechanic" then
-                TriggerEvent('qb-bossmenu:server:removeAccountMoney', Player.PlayerData.job.name, vehicleCustomisationPrices[type].prices[upgradeLevel])
+                TriggerEvent('qb-bossmenu:server:removeAccountMoney', Player.PlayerData.job.name,
+                    vehicleCustomisationPrices[type].prices[upgradeLevel])
             else
                 Player.Functions.RemoveMoney(moneyType, vehicleCustomisationPrices[type].prices[upgradeLevel], "bennys")
             end
@@ -36,7 +37,8 @@ AddEventHandler('qb-customs:attemptPurchase', function(type, upgradeLevel)
         if balance >= vehicleCustomisationPrices[type].price then
             TriggerClientEvent('qb-customs:purchaseSuccessful', source)
             if Player.PlayerData.job.name == "mechanic" then
-                TriggerEvent('qb-bossmenu:server:removeAccountMoney', Player.PlayerData.job.name, vehicleCustomisationPrices[type].price)
+                TriggerEvent('qb-bossmenu:server:removeAccountMoney', Player.PlayerData.job.name,
+                    vehicleCustomisationPrices[type].price)
             else
                 Player.Functions.RemoveMoney(moneyType, vehicleCustomisationPrices[type].price, "bennys")
             end
@@ -53,15 +55,15 @@ end)
 
 RegisterServerEvent("updateVehicle")
 AddEventHandler("updateVehicle", function(myCar)
-	local src = source
+    local src = source
     if IsVehicleOwned(myCar.plate) then
-        exports.oxmysql:execute('UPDATE player_vehicles SET mods=@mods WHERE plate=@plate', {['@mods'] = json.encode(myCar), ['@plate'] = myCar.plate})
+        exports.oxmysql:execute('UPDATE player_vehicles SET mods = ? WHERE plate = ?', {json.encode(myCar), myCar.plate})
     end
 end)
 
 function IsVehicleOwned(plate)
     local retval = false
-    local result = exports.oxmysql:scalarSync('SELECT plate FROM player_vehicles WHERE plate=@plate', {['@plate'] = plate})
+    local result = exports.oxmysql:scalarSync('SELECT plate FROM player_vehicles WHERE plate = ?', {plate})
     if result then
         retval = true
     end
