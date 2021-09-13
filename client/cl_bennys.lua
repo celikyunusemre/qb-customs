@@ -1,6 +1,4 @@
-isPlyInBennys = false
-
---#[Local Variables]#--
+local isPlyInBennys = false
 local plyFirstJoin = false
 local nearDefault = false
 local bennyHeading = 319.73135375977
