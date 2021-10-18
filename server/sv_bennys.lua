@@ -1,3 +1,5 @@
+local QBCore = exports['qb-core']:GetCoreObject()
+
 local chicken = vehicleBaseRepairCost
 
 RegisterNetEvent('qb-customs:attemptPurchase', function(type, upgradeLevel)

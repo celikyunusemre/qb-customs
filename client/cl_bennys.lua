@@ -1,3 +1,5 @@
+local QBCore = exports['qb-core']:GetCoreObject()
+
 local isPlyInBennys = false
 local plyFirstJoin = false
 local nearDefault = false
