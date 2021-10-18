@@ -1,3 +1,5 @@
+local QBCore = exports['qb-core']:GetCoreObject()
+
 local isPlyInBennys = false
 local plyFirstJoin = false
 local nearDefault = false
@@ -739,8 +741,7 @@ function ExitBennys()
     isPlyInBennys = false
 end
 
-RegisterNetEvent('event:control:bennys')
-AddEventHandler('event:control:bennys', function(useID)
+RegisterNetEvent('event:control:bennys', function(useID)
     if IsPedInAnyVehicle(PlayerPedId(), false) then
         bennyHeading = bennyGarages[useID].coords.w
         if not isPlyInBennys then -- Bennys
@@ -860,15 +861,13 @@ Citizen.CreateThread(function()
 end)
 
 --#[Event Handlers]#--
-RegisterNetEvent("qb-customs:purchaseSuccessful")
-AddEventHandler("qb-customs:purchaseSuccessful", function()
+RegisterNetEvent("qb-customs:purchaseSuccessful", function()
     isPurchaseSuccessful = true
     attemptingPurchase = false
     QBCore.Functions.Notify("Purchase Successful")
 end)
 
-RegisterNetEvent("qb-customs:purchaseFailed")
-AddEventHandler("qb-customs:purchaseFailed", function()
+RegisterNetEvent("qb-customs:purchaseFailed", function()
     isPurchaseSuccessful = false
     attemptingPurchase = false
     QBCore.Functions.Notify("Not enough money", "error")
