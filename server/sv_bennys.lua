@@ -1,7 +1,6 @@
 local chicken = vehicleBaseRepairCost
 
-RegisterServerEvent('qb-customs:attemptPurchase')
-AddEventHandler('qb-customs:attemptPurchase', function(type, upgradeLevel)
+RegisterServerEvent('qb-customs:attemptPurchase', function(type, upgradeLevel)
     local source = source
     local Player = QBCore.Functions.GetPlayer(source)
     local balance = nil
@@ -48,13 +47,11 @@ AddEventHandler('qb-customs:attemptPurchase', function(type, upgradeLevel)
     end
 end)
 
-RegisterServerEvent('qb-customs:updateRepairCost')
-AddEventHandler('qb-customs:updateRepairCost', function(cost)
+RegisterServerEvent('qb-customs:updateRepairCost', function(cost)
     chicken = cost
 end)
 
-RegisterServerEvent("updateVehicle")
-AddEventHandler("updateVehicle", function(myCar)
+RegisterServerEvent("updateVehicle", function(myCar)
     local src = source
     if IsVehicleOwned(myCar.plate) then
         exports.oxmysql:execute('UPDATE player_vehicles SET mods = ? WHERE plate = ?', {json.encode(myCar), myCar.plate})
