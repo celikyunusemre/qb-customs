@@ -54,59 +54,7 @@ end
 local function saveVehicle()
     local plyPed = PlayerPedId()
     local veh = GetVehiclePedIsIn(plyPed, false)
-    local vehicleMods = {
-        neon = {},
-        colors = {},
-        extracolors = {},
-        dashColour = -1,
-        interColour = -1,
-        lights = {},
-        tint = GetVehicleWindowTint(veh),
-        wheeltype = GetVehicleWheelType(veh),
-        platestyle = GetVehicleNumberPlateTextIndex(veh),
-        mods = {},
-        smokecolor = {},
-        xenonColor = -1,
-        oldLiveries = 24,
-        extras = {},
-        plateIndex = 0,
-    }
-
-    vehicleMods.xenonColor = GetCurrentXenonColour()
-    vehicleMods.lights[1], vehicleMods.lights[2], vehicleMods.lights[3] = GetVehicleNeonLightsColour(veh)
-    vehicleMods.colors[1], vehicleMods.colors[2] = GetVehicleColours(veh)
-    vehicleMods.extracolors[1], vehicleMods.extracolors[2] = GetVehicleExtraColours(veh)
-    vehicleMods.smokecolor[1], vehicleMods.smokecolor[2], vehicleMods.smokecolor[3] = GetVehicleTyreSmokeColor(veh)
-    vehicleMods.dashColour = GetVehicleInteriorColour(veh)
-    vehicleMods.interColour = GetVehicleDashboardColour(veh)
-    vehicleMods.oldLiveries = GetVehicleLivery(veh)
-    vehicleMods.plateIndex = GetVehicleNumberPlateTextIndex(veh)
-
-    for i = 0, 3 do
-        vehicleMods.neon[i] = IsVehicleNeonLightEnabled(veh, i)
-    end
-
-    for i = 0,16 do
-        vehicleMods.mods[i] = GetVehicleMod(veh,i)
-    end
-
-    for i = 17, 22 do
-        vehicleMods.mods[i] = IsToggleModOn(veh, i)
-    end
-
-    for i = 23, 48 do
-        vehicleMods.mods[i] = GetVehicleMod(veh,i)
-    end
-
-    for i = 1, 12 do
-        local ison = IsVehicleExtraTurnedOn(veh, i)
-        if 1 == tonumber(ison) then
-            vehicleMods.extras[i] = 1
-        else
-            vehicleMods.extras[i] = 0
-        end
-    end
-	local myCar = QBCore.Functions.GetVehicleProperties(veh)
+    local myCar = QBCore.Functions.GetVehicleProperties(veh)
     TriggerServerEvent('updateVehicle',myCar)  
 end
 
