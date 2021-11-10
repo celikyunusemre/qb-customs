@@ -11,9 +11,7 @@ files {
     'html/sounds/respray.ogg'
 }
 
-shared_scripts { 
-	'config.lua'
-}
+shared_script 'config.lua'
 
 client_scripts {
     'client/cl_ui.lua',
@@ -21,3 +19,5 @@ client_scripts {
 }
 
 server_script 'server/sv_bennys.lua'
+
+lua54 'yes'
