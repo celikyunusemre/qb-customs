@@ -84,10 +84,12 @@ end
 function RepairVehicle()
     local plyPed = PlayerPedId()
     local plyVeh = GetVehiclePedIsIn(plyPed, false)
+    local getFuel = GetVehicleFuelLevel(plyVeh)
 
     SetVehicleFixed(plyVeh)
 	SetVehicleDirtLevel(plyVeh, 0.0)
     SetVehiclePetrolTankHealth(plyVeh, 4000.0)
+    SetVehicleFuelLevel(plyVeh, getFuel)
     TriggerEvent('veh.randomDegredation',10,plyVeh,3)
 end
 
