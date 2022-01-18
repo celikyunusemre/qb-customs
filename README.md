@@ -1,4 +1,5 @@
-# qb-customs
+# This is my qb-customs edit for make qb-vehicleparts working! 
+# https://bashenga-scripts.tebex.io/package/4909029
 Vehicle Customization For QB-Core
 
 # License
