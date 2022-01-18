@@ -28,6 +28,7 @@ local originalPlateIndex = nil
 local attemptingPurchase = false
 local isPurchaseSuccessful = false
 local bennyLocation
+originalParts = {}
 
 --Blips
 
@@ -61,24 +62,71 @@ local function saveVehicle()
 end
 
 --#[Global Functions]#--
-function AttemptPurchase(type, upgradeLevel)
+function AttemptPurchase(type, upgradeLevel, name, colorCategory, colorType)
+    local plyPed = PlayerPedId()
+    local plyVeh = GetVehiclePedIsIn(plyPed, false)
+    local plate = GetVehicleNumberPlateText(plyVeh)
+    local vehname = GetLabelText(GetDisplayNameFromVehicleModel(GetEntityModel(plyVeh)))
+    type, upgradeLevel, name, colorCategory, colorType = exports['qb-vehicleparts']:getInformations(type, upgradeLevel, name, colorCategory, colorType, plate)
 
-    if upgradeLevel ~= nil then
-        upgradeLevel = upgradeLevel + 2
-    end
-    TriggerServerEvent("qb-customs:attemptPurchase", type, upgradeLevel)
-
+    TriggerServerEvent("qb-customs:attemptPurchase", type, upgradeLevel, name, plate, vehname, colorCategory, colorType, plyVeh)
     attemptingPurchase = true
-
     while attemptingPurchase do
         Wait(1)
     end
-
     if not isPurchaseSuccessful then
         PlaySoundFrontend(-1, "ERROR", "HUD_FRONTEND_DEFAULT_SOUNDSET", 1)
     end
-
     return isPurchaseSuccessful
+end
+
+function idk()
+    for k, v in ipairs(vehicleCustomisation) do
+        local validMods, amountValidMods = CheckValidMods(v.category, v.id)
+        local currentMod, currentModName = GetCurrentMod(v.id)
+
+        if amountValidMods > 0 or v.id == 18 then
+            if v.id == 11 or v.id == 12 or v.id == 13 or v.id == 15 or v.id == 16 then --Performance Upgrades
+                local tempNum = 0
+
+                createMenu(v.category:gsub("%s+", "") .. "Menu", v.category, "Choose an Upgrade")
+
+                for m, n in pairs(validMods) do
+                    tempNum = tempNum + 1
+
+                    if maxVehiclePerformanceUpgrades == 0 then
+                        populateMenu(v.category:gsub("%s+", "") .. "Menu", n.id, n.name, "$" .. vehicleCustomisationPrices.performance.prices[tempNum])
+
+                        if currentMod == n.id then
+                            updateItem2Text(v.category:gsub("%s+", "") .. "Menu", n.id, "Installed")
+                        end
+                    else
+                        if tempNum <= (maxVehiclePerformanceUpgrades + 1) then
+                            populateMenu(v.category:gsub("%s+", "") .. "Menu", n.id, n.name, "$" .. vehicleCustomisationPrices.performance.prices[tempNum])
+
+                            if currentMod == n.id then
+                                updateItem2Text(v.category:gsub("%s+", "") .. "Menu", n.id, "Installed")
+                            end
+                        end
+                    end
+                end
+
+                finishPopulatingMenu(v.category:gsub("%s+", "") .. "Menu")
+            else
+                createMenu(v.category:gsub("%s+", "") .. "Menu", v.category .. " Customisation", "Choose a Mod")
+
+                for m, n in pairs(validMods) do
+                    populateMenu(v.category:gsub("%s+", "") .. "Menu", n.id, n.name, "$" .. vehicleCustomisationPrices.cosmetics.price)
+
+                    if currentMod == n.id then
+                        updateItem2Text(v.category:gsub("%s+", "") .. "Menu", n.id, "Installed")
+                    end
+                end
+
+                finishPopulatingMenu(v.category:gsub("%s+", "") .. "Menu")
+            end
+        end
+    end
 end
 
 function RepairVehicle()
@@ -678,9 +726,48 @@ end
 function ExitBennys()
     local plyPed = PlayerPedId()
     local plyVeh = GetVehiclePedIsIn(plyPed, false)
+    if type(next(originalParts)) ~= "nil" then 
+        for i = 0,48 do
+            local modId = originalParts.mods[i]
+            if i >= 18 and i <= 22 then
+                ToggleVehicleMod(plyVeh, i, modId)
+            else
+                SetVehicleMod(plyVeh, i, tonumber(modId))
+            end
+        end
 
-    saveVehicle()
+        -- originalPrimaryColour = originalParts.colors[1]
+        -- originalSecondaryColour = originalParts.colors[2]
+        -- originalPearlescentColour = originalParts.extracolors[1]
+        -- originalWheelColour = originalParts.extracolors[2]
+        -- originalDashColour = originalParts.dashColour
+        -- originalInterColour = originalParts.interColour
+        originalWindowTint = originalParts.tint
+        originalWheelType = originalParts.wheeltype
+        -- originalNeonColourR = originalParts.lights[1]
+        -- originalNeonColourG = originalParts.lights[2]
+        -- originalNeonColourB = originalParts.lights[3]
+        originalXenonColour = originalParts.xenonColor
+        originalOldLivery = originalParts.oldLiveries
+        originalPlateIndex = originalParts.plateIndex
 
+        -- for i = 0, 3 do
+        --     originalNeonLightSide = i
+        --     originalNeonLightState = originalParts.neon[i]
+        --     RestoreOriginalNeonStates()
+        -- end
+
+        RestoreOriginalWheels()
+        -- RestoreOriginalNeonColours()
+        RestoreOriginalXenonColour()
+        -- RestoreOriginalColours()
+        RestoreOriginalWindowTint()
+        RestoreOldLivery()
+        RestorePlateIndex()
+
+        originalParts = {}
+        saveVehicle()
+    end
     DisplayMenuContainer(false)
 
     FreezeEntityPosition(plyVeh, false)
@@ -691,6 +778,7 @@ function ExitBennys()
     end)
 
     isPlyInBennys = false
+    TriggerServerEvent('qb-vehicleparts:server:giveOrder', GetVehicleNumberPlateText(plyVeh))
 end
 
 RegisterNetEvent('event:control:bennys', function(useID)
@@ -720,11 +808,22 @@ function enterLocation(locationsPos)
     end
 
     InitiateMenus(isMotorcycle, GetVehicleBodyHealth(plyVeh))
+    local mechanicCount = 0
+    QBCore.Functions.TriggerCallback('qb-customs:server:getCurrentMechanic', function(count)
+        mechanicCount = count
+    end)
 
     SetTimeout(100, function()
-        if GetVehicleBodyHealth(plyVeh) < 1000.0 then
-            DisplayMenu(true, "repairMenu")
-        else
+        if mechanicCount == 0 then 
+            if GetVehicleBodyHealth(plyVeh) < 1000.0 then 
+                DisplayMenu(true, "repairMenu")
+            else
+                DisplayMenu(true, "mainMenu")
+            end
+        elseif mechanicCount > 0 and GetVehicleBodyHealth(plyVeh) < 1000.0 then 
+            QBCore.Functions.Notify("There are mechanic(s) in the town, contact with them to repair your car!")
+            DisplayMenu(true, "mainMenu")
+        elseif mechanicCount > 0 then 
             DisplayMenu(true, "mainMenu")
         end
 
@@ -792,13 +891,13 @@ CreateThread(function()
                         if not isPlyInBennys then
                             Draw3DText(v.coords.x, v.coords.y, v.coords.z + 0.5, "[Press ~p~E~w~ - Enter Benny's Motorworks]", 255, 255, 255, 255, 4, 0.45, true, true, true, true, 0, 0, 0, 0, 55)
                             if IsControlJustReleased(1, 38) then
-				if GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId()), -1) == PlayerPedId() then
-					if (v.useJob and isAuthorized((QBCore.Functions.GetPlayerData().job.name), k)) or not v.useJob then
-					    TriggerEvent('event:control:bennys', k)
-					else
-					    QBCore.Functions.Notify("You are not authorized", "error")
-					end
-				end
+                                if GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId()), -1) == PlayerPedId() then
+                                    if (v.useJob and isAuthorized((QBCore.Functions.GetPlayerData().job.name), k)) or not v.useJob then
+                                        TriggerEvent('event:control:bennys', k)
+                                    else
+                                        QBCore.Functions.Notify("You are not authorized", "error")
+                                    end
+                                end
                             end
                         else
                             disableControls()
@@ -815,10 +914,12 @@ CreateThread(function()
 end)
 
 --#[Event Handlers]#--
-RegisterNetEvent("qb-customs:purchaseSuccessful", function()
+RegisterNetEvent("qb-customs:purchaseSuccessful", function(type)
     isPurchaseSuccessful = true
     attemptingPurchase = false
-    QBCore.Functions.Notify("Purchase Successful")
+    if not type == "repair" and not type == "respray" and not type == "neoncolours" and not type == "neonside" then 
+        QBCore.Functions.Notify("Added to receipe")
+    end
 end)
 
 RegisterNetEvent("qb-customs:purchaseFailed", function()
