@@ -12,6 +12,7 @@ files {
 }
 
 shared_script 'config.lua'
+shared_script '@qb-vehicleparts/shared/sh_config.lua'
 
 client_scripts {
     'client/cl_ui.lua',
