@@ -358,7 +358,7 @@ function InitiateMenus(isMotorcycle, vehicleHealth)
         createMenu(v.category .. "Menu", v.category .. " Colours", "Choose a Colour")
 
         for m, n in ipairs(v.colours) do
-            populateMenu(v.category .. "Menu", n.id, n.name, "$" .. vehicleCustomisationPrices.respray.price)
+            populateMenu(v.category .. "Menu", n.id, n.name, "$" .. Config.nonPartPrices['respray'])
         end
 
         finishPopulatingMenu(v.category .. "Menu")
@@ -515,7 +515,7 @@ function InitiateMenus(isMotorcycle, vehicleHealth)
         createMenu(v.name:gsub("%s+", "") .. "Menu", "Neon Customisation", "Enable or Disable Neon")
 
         populateMenu(v.name:gsub("%s+", "") .. "Menu", 0, "Disabled", "$0")
-        populateMenu(v.name:gsub("%s+", "") .. "Menu", 1, "Enabled", "$" .. vehicleCustomisationPrices.neonside.price)
+        populateMenu(v.name:gsub("%s+", "") .. "Menu", 1, "Enabled", "$" .. Config.nonPartPrices['neonside'])
 
         updateItem2Text(v.name:gsub("%s+", "") .. "Menu", currentNeonState, "Installed")
 
@@ -527,7 +527,7 @@ function InitiateMenus(isMotorcycle, vehicleHealth)
     createMenu("NeonColoursMenu", "Neon Colours", "Choose a Colour")
 
     for k, v in ipairs(vehicleNeonOptions.neonColours) do
-        populateMenu("NeonColoursMenu", k, vehicleNeonOptions.neonColours[k].name, "$" .. vehicleCustomisationPrices.neoncolours.price)
+        populateMenu("NeonColoursMenu", k, vehicleNeonOptions.neonColours[k].name, "$" .. Config.nonPartPrices['neoncolours'])
 
         if currentNeonR == vehicleNeonOptions.neonColours[k].r and currentNeonG == vehicleNeonOptions.neonColours[k].g and currentNeonB == vehicleNeonOptions.neonColours[k].b then
             updateItem2Text("NeonColoursMenu", k, "Installed")
@@ -636,7 +636,7 @@ function MenuManager(state)
                 end
             elseif isMenuActive("WheelsMenu") then
                 if currentWheelCategory == 20 then
-                    if AttemptPurchase("wheelsmoke", currentMenuItemID, currentCategory) then
+                    if AttemptPurchase("wheelsmoke", currentMenuItemID, currentCategory, currentWheelCategory, vehicleTyreSmokeOptions[currentMenuItemID]) then
                         local r = vehicleTyreSmokeOptions[currentMenuItemID].r
                         local g = vehicleTyreSmokeOptions[currentMenuItemID].g
                         local b = vehicleTyreSmokeOptions[currentMenuItemID].b
