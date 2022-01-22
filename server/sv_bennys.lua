@@ -22,10 +22,10 @@ function IsVehicleOwned(plate)
     return retval
 end
 
-RegisterNetEvent('qb-customs:attemptPurchase', function(type, upgradeLevel, name, plate, vehicleName, colorCategory, colorType, entity)
-    local src = source
-    TriggerEvent('qb-vehicleparts:server:createOrder', src, type, upgradeLevel, name, plate, vehicleName, colorCategory, colorType, entity)
-end)
+-- RegisterNetEvent('qb-customs:attemptPurchase', function(type, upgradeLevel, name, plate, vehicleName, colorCategory, colorType, entity)
+--     local src = source
+--     TriggerEvent('qb-vehicleparts:server:createOrder', src, type, upgradeLevel, name, plate, vehicleName, colorCategory, colorType, entity)
+-- end)
 
 QBCore.Functions.CreateCallback('qb-customs:server:getCurrentMechanic', function(source, cb)
     local amount = 0
