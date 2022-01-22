@@ -67,8 +67,6 @@ function AttemptPurchase(type, upgradeLevel, name, colorCategory, colorType)
     local plyVeh = GetVehiclePedIsIn(plyPed, false)
     local plate = GetVehicleNumberPlateText(plyVeh)
     local vehname = GetLabelText(GetDisplayNameFromVehicleModel(GetEntityModel(plyVeh)))
-    type, upgradeLevel, name, colorCategory, colorType = exports['qb-vehicleparts']:getInformations(type, upgradeLevel, name, colorCategory, colorType, plate)
-
     TriggerServerEvent("qb-customs:attemptPurchase", type, upgradeLevel, name, plate, vehname, colorCategory, colorType, plyVeh)
     attemptingPurchase = true
     while attemptingPurchase do
@@ -444,7 +442,7 @@ function PreviewWindowTint(windowTintID)
     if originalWindowTint == nil then
         originalWindowTint = GetVehicleWindowTint(plyVeh)
     end
-
+    
     SetVehicleWindowTint(plyVeh, windowTintID)
 end
 
