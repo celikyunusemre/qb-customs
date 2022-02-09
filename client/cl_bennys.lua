@@ -370,8 +370,19 @@ function RestoreOriginalWheels()
         originalWheelType = nil
         originalWheelCategory = nil
         originalWheel = nil
-        originalCustomWheels = nil
+        -- originalCustomWheels = nil
     end
+end
+
+function RestoreCustomWheel()
+    local plyPed = PlayerPedId()
+    local plyVeh = GetVehiclePedIsIn(plyPed, false)
+    
+    SetVehicleMod(plyVeh, 23, GetVehicleMod(plyVeh, 23), originalCustomWheels)
+    if GetVehicleClass(plyVeh) == 8 then --Motorcycle
+        SetVehicleMod(plyVeh, 24, GetVehicleMod(plyVeh, 23), originalCustomWheels)
+    end
+    originalCustomWheels = nil
 end
 
 function RestoreOriginalNeonStates()
@@ -658,6 +669,9 @@ function ApplyCustomWheel(state)
     if GetVehicleClass(plyVeh) == 8 then --Motorcycle
         SetVehicleMod(plyVeh, 24, GetVehicleMod(plyVeh, 24), state)
     end
+    if state == 0 then 
+        originalParts.customWheel = state
+    end
 end
 
 function ApplyNeon(side, enabled)
@@ -748,7 +762,8 @@ function ExitBennys()
         originalXenonColour = originalParts.xenonColor
         originalOldLivery = originalParts.oldLiveries
         originalPlateIndex = originalParts.plateIndex
-
+   
+        originalCustomWheels = originalParts.customWheel 
         -- for i = 0, 3 do
         --     originalNeonLightSide = i
         --     originalNeonLightState = originalParts.neon[i]
@@ -756,6 +771,7 @@ function ExitBennys()
         -- end
 
         RestoreOriginalWheels()
+        RestoreCustomWheel() 
         -- RestoreOriginalNeonColours()
         RestoreOriginalXenonColour()
         -- RestoreOriginalColours()
