@@ -385,7 +385,7 @@ function InitiateMenus(isMotorcycle, vehicleHealth)
             local currentCustomWheelState = GetCurrentCustomWheelState()
             createMenu(v.category:gsub("%s+", "") .. "Menu", v.category, "Enable or Disable Custom Wheels")
 
-            populateMenu(v.category:gsub("%s+", "") .. "Menu", 0, "Disable", "Add receipe")
+            populateMenu(v.category:gsub("%s+", "") .. "Menu", 0, "Disable", "$"..Config.nonPartPrices['customwheelsRemove'])
             populateMenu(v.category:gsub("%s+", "") .. "Menu", 1, "Enable", "Add receipe")
 
             updateItem2Text(v.category:gsub("%s+", "") .. "Menu", currentCustomWheelState, "Installed")
@@ -994,7 +994,8 @@ function saveOriginalMods(veh)
         xenonColor = -1,
         oldLiveries = 24,
         extras = {},
-        plateIndex = 0
+        plateIndex = 0,
+        customWheel = 0
     }
 
     vehicleMods.xenonColor = GetCurrentXenonColour(veh)
@@ -1006,6 +1007,8 @@ function saveOriginalMods(veh)
     vehicleMods.interColour = GetVehicleDashboardColour(veh)
     vehicleMods.oldLiveries = GetVehicleLivery(veh)
     vehicleMods.plateIndex = GetVehicleNumberPlateTextIndex(veh)
+    vehicleMods.customWheel = GetVehicleModVariation(veh, 23)
+    if vehicleMods.customWheel == false then vehicleMods.customWheel = 0 else vehicleMods.customWheel = 1 end
 
     for i = 0, 3 do
         vehicleMods.neon[i] = IsVehicleNeonLightEnabled(veh, i)
