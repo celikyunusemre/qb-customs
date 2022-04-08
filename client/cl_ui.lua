@@ -1009,6 +1009,7 @@ function saveOriginalMods(veh)
     vehicleMods.plateIndex = GetVehicleNumberPlateTextIndex(veh)
     vehicleMods.customWheel = GetVehicleModVariation(veh, 23)
     if vehicleMods.customWheel == false then vehicleMods.customWheel = 0 else vehicleMods.customWheel = 1 end
+    if vehicleMods.tint == -1 then vehicleMods.tint = 0 end
 
     for i = 0, 3 do
         vehicleMods.neon[i] = IsVehicleNeonLightEnabled(veh, i)
